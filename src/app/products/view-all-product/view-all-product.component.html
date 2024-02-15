@@ -1,0 +1,200 @@
+<div class="container ">
+    <h2>Product listing</h2>
+    <!-- Button trigger modal -->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddProduct"
+                    (click)="clearProductForm()">
+                    New Product
+                </button>
+            </div>
+            <div class="col-sm">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <input #seachString type="text" class="form-control" name="SearchStr" placeholder="Search">
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" (click)="applySearch()">Search</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <table class="table p-5">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col" class="text-center" colspan="2">Actions</th>
+
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr *ngFor="let prod of productList">
+                <th scope="row">{{prod.Name}}</th>
+                <td>{{prod.Description}}</td>
+                <td class="text-end">{{prod.Price}}</td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-warning" (click)="getProduct(prod.Id)" data-bs-toggle="modal"
+                        data-bs-target="#UpdateProduct">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path
+                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                        </svg>
+                    </button>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger" (click)="getDeleteProduct(prod.Id)"
+                        data-bs-toggle="modal" data-bs-target="#DeleteProduct">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                            <path
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                        </svg>
+
+                    </button>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- AddProduct Modal -->
+    <div class="modal modal-lg fade" id="AddProduct" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form [formGroup]="productForm" (submit)="createProduct()">
+                    <div class="modal-body">
+
+                        <div class="mb-3" class="form-group">
+                            <label for="Name">Name</label>
+                            <input required minlength="2" maxlength="100" type="text" class="form-control" name="Name"
+                                placeholder="Product Name" formControlName="Name">
+                            <!-- <div *ngIf="name.touched && name.invalid" class="alert alert-danger">
+                                <p *ngIf="name.errors && name.errors['required']" > Name is required</p>
+                                <p *ngIf="name.errors && name.errors['minlength']" > Name has a minimum lenght of 2 chars</p>
+                            </div> -->
+                        </div>
+                        <div class="mb-3" class="form-group">
+                            <label for="Description">Description</label>
+                            <textarea class="form-control" name="Description" rows="3"
+                                formControlName="Description"></textarea>
+                        </div>
+                        <div class=" mb-3" class="form-group">
+                            <i class="fas fa-dollar-sign trailing"></i>
+                            <label for="Price">Price</label>
+                            <input required min="1" max="20000" class="form-control" name="Price"
+                                formControlName="Price" placeholder="Price">
+                            <!-- <div *ngIf="price.touched && price.invalid" class="alert alert-danger">
+                                <p *ngIf="price.errors && price.errors['required']" > Price is required</p>
+                                <p *ngIf="price.errors && price.errors['minimum']" > Price to be at least 1</p>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button #closebuttonadd type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- UpdateProduct Modal -->
+    <div class="modal modal-lg fade" id="UpdateProduct" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form [formGroup]="productForm" (submit)="updateProduct()">
+                    <div class="modal-body">
+
+                        <div class="mb-3" class="form-group">
+                            <label for="Name">Name</label>
+                            <input required minlength="2" maxlength="100" type="text" class="form-control" name="Name"
+                                placeholder="Product Name" formControlName="Name">
+                        </div>
+                        <div class="mb-3" class="form-group">
+                            <label for="Description">Description</label>
+                            <textarea class="form-control" name="Description" rows="3"
+                                formControlName="Description"></textarea>
+                        </div>
+                        <div class=" mb-3" class="form-group">
+                            <i class="fas fa-dollar-sign trailing"></i>
+                            <label for="Price">Price</label>
+                            <input required min="1" max="20000" class="form-control" name="Price"
+                                formControlName="Price" placeholder="Price">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button #closebuttonupdate type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- DeleteProduct Modal -->
+    <div class="modal modal-lg fade" id="DeleteProduct" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form [formGroup]="productForm" (submit)="deleteProduct()">
+                    <div class="modal-body">
+
+                        <div class="mb-3" class="form-group">
+                            <label for="Name">Name</label>
+                            <input type="text" class="form-control" name="Name" placeholder="Product Name"
+                                formControlName="Name">
+                        </div>
+                        <div class="mb-3" class="form-group">
+                            <label for="Description">Description</label>
+                            <textarea class="form-control" name="Description" rows="3"
+                                formControlName="Description"></textarea>
+                        </div>
+                        <div class=" mb-3" class="form-group">
+                            <i class="fas fa-dollar-sign trailing"></i>
+                            <label for="Price">Price</label>
+                            <input class="form-control" name="Price" formControlName="Price" placeholder="Price">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p>Are you sure to delete this product</p>
+                        <button #closebuttondelete type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
